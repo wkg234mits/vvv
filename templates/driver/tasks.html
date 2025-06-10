@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <h2 class="mb-4">Mes Missions</h2>
+
+    <div class="card p-4">
+        <table class="table table-dark table-custom table-hover">
+            <thead>
+                <tr>
+                    <th>Camion</th>
+                    <th>Période</th>
+                    <th>Lieu Départ</th>
+                    <th>Lieu Arrivée</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="avatar me-2">🚛</div>
+                            <div>
+                                <div>{{ task.truck.matricule }}</div>
+                                <small class="text-muted">{{ task.truck.model }}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        {{ task.start_date.strftime('%d/%m %H:%M') }}<br>
+                        au {{ task.end_date.strftime('%d/%m %H:%M') }}
+                    </td>
+                    <td>{{ task.lieu_depart }}</td>
+                    <td>{{ task.lieu_arrivee }}</td>
+                    <td>
+                        <span class="badge bg-{{ 'success' if task.status == 'Terminé' else 'warning' }}">
+                            {{ task.status }}
+                        </span>
+                    </td>
+                    <td>
+    {% if task.status != 'Terminé' %}
+    <span class="badge bg-info">⛽ Auto via capteur</span>
+    {% endif %}
+</td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Fuel Update Modal -->
+<div class="modal fade" id="updateFuelModal" tabindex="-1" aria-labelledby="updateFuelModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5 id="updateFuelModalLabel" class="modal-title">Mise à jour du Carburant</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <form id="fuelUpdateForm" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="fuelLevelInput" class="form-label">Niveau actuel (%)</label>
+                        <input type="number" id="fuelLevelInput" name="fuel_level" 
+                               class="form-control" min="0" max="100" step="0.1" required>
+                    </div>
+                    <input type="hidden" name="task_id" id="taskIdInput">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-cpg">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setCurrentTask(taskId) {
+        document.getElementById('taskIdInput').value = taskId;
+    }
+    
+    document.getElementById('fuelUpdateForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        
+        try {
+            const response = await fetch('/update_fuel', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if(response.ok) {
+                location.reload();
+            } else {
+                alert('Erreur lors de la mise à jour');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Erreur lors de la mise à jour');
+        }
+    });
+</script>
+{% endblock %}

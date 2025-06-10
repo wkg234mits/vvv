@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <h2 class="mb-4">Dashboard Administrateur</h2>
+
+    <!-- Cartes de statistiques -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card p-3">
+                <h5>Camions</h5>
+                <h2 class="text-primary">{{ trucks|length }}</h2>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card p-3">
+                <h5>Tâches Actives</h5>
+                <h2 class="text-warning">{{ active_tasks }}</h2>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card p-3">
+                <h5>Chauffeurs</h5>
+                <h2 class="text-info">{{ users|length }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card p-3">
+                <h5>Administrateurs</h5>
+                <h2 class="text-danger">{{ admins|length }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

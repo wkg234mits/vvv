@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-truck-moving me-2"></i>Gestion des Camions</h2>
+        <button class="btn btn-cpg" data-bs-toggle="modal" data-bs-target="#addTruckModal">
+            <i class="fas fa-plus me-2"></i>Ajouter Camion
+        </button>
+    </div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="container mt-2">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+    <div class="card p-4">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Modèle</th>
+                        <th>Matricule</th>
+                        <th>Carburant</th>
+                        <th>Date Création</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for truck in trucks %}
+                    <tr>
+                        <td>{{ truck.model }}</td>
+                        <td>{{ truck.matricule }}</td>
+                        <td>
+                            <div class="progress" style="height: 20px;">
+                                <div class="progress-bar bg-success" 
+                                     role="progressbar" 
+                                     style="width: {{ truck.fuel_level }}%">
+                                    {{ truck.fuel_level }}%
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ truck.created_at.strftime('%d/%m/%Y') }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#editTruckModal{{ truck.id }}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#deleteTruckModal{{ truck.id }}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add Truck Modal -->
+<div class="modal fade" id="addTruckModal">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5><i class="fas fa-truck me-2"></i>Nouveau Camion</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="/add_truck">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label>Modèle</label>
+                        <input type="text" name="model" class="form-control bg-dark text-white" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Matricule</label>
+                        <input type="text" name="matricule" class="form-control bg-dark text-white" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Niveau Carburant</label>
+                        <input type="number" 
+                               name="fuel_level" 
+                               class="form-control bg-dark text-white" 
+                               min="0" 
+                               max="100" 
+                               step="0.1" 
+                               required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-cpg">
+                        <i class="fas fa-save me-2"></i>Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Truck Modals -->
+{% for truck in trucks %}
+<div class="modal fade" id="editTruckModal{{ truck.id }}">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5><i class="fas fa-edit me-2"></i>Modifier Camion</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="/edit_truck/{{ truck.id }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label>Modèle</label>
+                        <input type="text" 
+                               name="model" 
+                               class="form-control bg-dark text-white" 
+                               value="{{ truck.model }}" 
+                               required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Matricule</label>
+                        <input type="text" 
+                               name="matricule" 
+                               class="form-control bg-dark text-white" 
+                               value="{{ truck.matricule }}" 
+                               required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Niveau Carburant</label>
+                        <input type="number" 
+                               name="fuel_level" 
+                               class="form-control bg-dark text-white" 
+                               value="{{ truck.fuel_level }}"
+                               min="0" 
+                               max="100" 
+                               step="0.1" 
+                               required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-cpg">
+                        <i class="fas fa-save me-2"></i>Modifier
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- Delete Truck Modals -->
+{% for truck in trucks %}
+<div class="modal fade" id="deleteTruckModal{{ truck.id }}">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5><i class="fas fa-exclamation-triangle me-2"></i>Confirmation</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="/delete_truck/{{ truck.id }}">
+                <div class="modal-body">
+                    <p>Êtes-vous sûr de vouloir supprimer ce camion ?</p>
+                    <p class="fw-bold">{{ truck.matricule }} ({{ truck.model }})</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-2"></i>Supprimer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

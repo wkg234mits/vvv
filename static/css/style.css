@@ -1,0 +1,118 @@
+body {
+    background-image: url('https://prod.cdn-medias.jeuneafrique.com/cdn-cgi/image/q=auto,f=auto,metadata=none,width=1215,fit=cover/https://prod.cdn-medias.jeuneafrique.com/medias/2023/10/26/jad20231026-eco-tunisie-crise-exportations-phosphates.jpg');
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    color: #238278; /* bleu-vert foncé pour contraste */
+}
+
+.sidebar {
+    background:#006d77;
+    height: 100vh;
+    position: fixed;
+    width: 250px;
+    padding: 20px;
+}
+/* Style de la sidebar */
+.sidebar {
+    background: #006d77;
+    backdrop-filter: blur(10px);
+    border-right: 1px solid  rgba(255, 255, 255, 0.995);
+}
+
+.sidebar .nav-link {
+    border-radius: 8px;
+    margin: 5px 0;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+}
+
+.sidebar .nav-link:hover {
+    background:#65b4ac;
+    transform: translateX(5px);
+}
+
+.sidebar .nav-link.active {
+    background: linear-gradient(90deg, #006d77 0%, hsl(174, 91%, 37%) 100%);
+    box-shadow:0 4px 15px rgba(65, 166, 175, 0.4);
+}
+
+.sidebar .nav-link i {
+    width: 25px;
+    text-align: center;
+}
+
+/* Taille des icônes */
+.fa-gas-pump { font-size: 1.8rem; }
+.fa-tachometer-alt { font-size: 1.1rem; }
+.fa-truck-moving { font-size: 1.1rem; }
+.fa-users-cog { font-size: 1.1rem; }
+.fa-tasks { font-size: 1.1rem; }
+.fa-clipboard-list { font-size: 1.1rem; }
+
+
+.dashboard-content {
+    margin-left: 250px;
+    padding: 30px;
+}
+
+.card {
+    background:white;
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.btn-cpg {
+    background:  #2797a1;
+    color: white;
+    transition: all 0.3s;
+}
+
+.btn-cpg:hover {
+    background:  #2797a1;;
+}
+
+.table-custom {
+    background:#ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    color:#fbfeff;
+}
+/* static/css/style.css */
+.table-hover tbody tr:hover {
+    background:  #fff;
+    transform: scale(1.02);
+    transition: all 0.2s ease;
+}
+
+.modal-content {
+    background: white;
+    border: 1px solid rgba(0, 109, 119, 0.2);
+    backdrop-filter: blur(15px);
+}
+
+.progress {
+    background: #d1eeec;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.alert {
+    z-index: 10000;
+    min-width: 300px;
+}
+.text-primary {
+    --bs-text-opacity: 1;
+    color: rgb(16, 17, 18) !important;
+}
+/* Ajouter plus de styles personnalisés */

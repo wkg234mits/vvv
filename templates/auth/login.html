@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion</title>
+    
+    <!-- CSS personnalisé intégré ici -->
+    <style>
+        /* === TON CSS ici === */
+        .login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: 
+                url('https://prod.cdn-medias.jeuneafrique.com/cdn-cgi/image/q=auto,f=auto,metadata=none,width=1215,fit=cover/https://prod.cdn-medias.jeuneafrique.com/medias/2023/10/26/jad20231026-eco-tunisie-crise-exportations-phosphates.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 2rem;
+}
+
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            width: 100%;
+            max-width: 400px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 32px  0 8px 32px rgba(0, 0, 0,0.35);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: cardEntrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .login-card:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .login-header h2 {
+            color: #165557;
+            font-weight: 600;
+            font-size: 1.8rem;
+            letter-spacing: -0.5px;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .login-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #006d77, #83c5be);
+            border-radius: 2px;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 0.875rem 1.25rem;
+            background:  rgba(255, 255, 255, 0.07)!important;
+            border: 1px solid rgba(10, 132, 141, 0.2);
+            border-radius: 0.75rem;
+            color: #0f1111 !important;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .login-form input::placeholder {
+            color: rgba(255, 255, 255, 0.6) !important;
+            opacity: 1;
+        }
+
+        .login-form input:focus {
+            background:  rgba(255, 255, 255, 0.1) !important;
+            border-color: #83c5be !important;
+            box-shadow: 0 0 0 3px rgba(131, 197, 190, 0.3);
+            outline: none;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.875rem;
+            background: linear-gradient(135deg, #006d77, #83c5be 100%);
+            border: none;
+            border-radius: 0.75rem;
+            color: #fff;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15pxrgba(0, 109, 119, 0.4);
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 1rem;
+            }
+
+            .login-card {
+                padding: 1.5rem;
+            }
+
+            .login-header h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @keyframes cardEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-card">
+
+            <!-- Messages flash -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert alert-{{ category }}" style="color: #fff; background-color: rgba(236, 27, 3, 0.8); border-radius: 0.5rem; padding: 0.75rem; margin-bottom: 1rem; text-align: center;">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <div class="login-header">
+                <h2>Connexion CPG</h2>
+            </div>
+            
+            <form method="POST" class="login-form">
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Adresse email" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" name="password" placeholder="Mot de passe" required>
+                </div>
+
+                <button type="submit" class="login-btn">Se connecter</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

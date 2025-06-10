@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-tasks me-2"></i>Gestion des Tâches</h2>
+        <button class="btn btn-cpg" data-bs-toggle="modal" data-bs-target="#assignTaskModal">
+            <i class="fas fa-plus me-2"></i>Assigner Tâche
+        </button>
+    </div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="container mt-2">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+    <div class="card p-4">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Chauffeur</th>
+                        <th>Camion</th>
+                        <th>Date Début</th>
+                        <th>Date Fin</th>
+                        <th>Lieu Départ</th>
+                        <th>Lieu Final</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                    <tr data-task-id="{{ task.id }}">
+                        <td>{{ task.user.email }}</td>
+                        <td>{{ task.truck.matricule }}</td>
+                        <td>{{ task.start_date.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td>{{ task.end_date.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td>{{ task.lieu_depart }}</td>
+                        <td>{{ task.lieu_arrivee }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'success' if task.status == 'Terminé' else 'warning' }}">
+                                {{ task.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-info" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#taskDetailsModal{{ task.id }}">
+                                👁️
+                            </button>
+                            <button class="btn btn-sm btn-danger delete-btn">❌</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    
+</div>
+
+<!-- Modals de détails -->
+{% for task in tasks %}
+<div class="modal fade" id="taskDetailsModal{{ task.id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5 class="modal-title">Détails Tâche #{{ task.id }}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Chauffeur:</strong> {{ task.user.email }}</p>
+                        <p><strong>Camion:</strong> {{ task.truck.matricule }}</p>
+                        <p><strong>Modèle:</strong> {{ task.truck.model }}</p>
+                        <p><strong>Lieu Départ:</strong> {{ task.lieu_depart }}</p>
+                    </div>
+                    <div class="col-md-6">
+    <p><strong>Date Début:</strong> {{ task.start_date.strftime('%d/%m/%Y %H:%M') }}</p>
+    <p><strong>Date Fin:</strong> {{ task.end_date.strftime('%d/%m/%Y %H:%M') }}</p>
+    <p><strong>Lieu Final:</strong> {{ task.lieu_arrivee }}</p>
+
+    <!-- Suivi du volume de carburant -->
+  <div class="circular-container text-center" style="margin: 2rem;">
+  <h1 style="
+    font-family: 'Orbitron', sans-serif;
+    margin-bottom: 1rem;
+    color: #238278;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  ">
+    Volume actuel
+  </h1>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+
+  <div style="
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin: auto;
+    background: radial-gradient(circle at 30% 30%, #0f0f3d, #020218);
+    border-radius: 50%;
+    box-shadow:
+      inset -5px -5px 15px rgba(255,255,255,0.1),
+      inset 5px 5px 15px rgba(0,0,0,0.5),
+      0 0 15px rgba(0, 210, 255, 0.5);
+  ">
+    <svg width="160" height="160">
+      <defs>
+        <linearGradient id="grad3d" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color: #c3211e; stop-opacity: 1" />
+          <stop offset="100%" style="stop-color: #3a7bd5; stop-opacity: 1" />
+        </linearGradient>
+      </defs>
+      <!-- Fond -->
+      <circle cx="80" cy="80" r="70" stroke="#2f3542" stroke-width="10" fill="none" />
+      <!-- Cercle de progression -->
+      <circle
+        cx="80" cy="80" r="70"
+        stroke="url(#grad3d)"
+        stroke-width="10"
+        fill="none"
+        stroke-dasharray="440"
+        stroke-dashoffset="{{ 440 - (volume / 1000 * 440) }}"
+        stroke-linecap="round"
+        transform="rotate(-90 80 80)"
+        style="filter: drop-shadow(0 0 8px rgba(179, 63, 27, 0.7));"
+      />
+    </svg>
+
+    <!-- Texte au centre -->
+    <div style="
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: lch(76.12% 4.28 169.05);
+      text-shadow: 0 0 6px rgba(168, 52, 20, 0.8);
+    ">
+      {{ volume }} ml
+    </div>
+  </div>
+</div>
+
+
+
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- Modal Assigner une Tâche -->
+<div class="modal fade" id="assignTaskModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-plus me-2"></i>Nouvelle Tâche</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="/assign_task">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Chauffeur</label>
+                            <select name="driver_id" class="form-select bg-dark text-white">
+                                {% for user in users if user.role == 'driver' %}
+                                <option value="{{ user.id }}">{{ user.email }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Camion</label>
+                            <select name="truck_id" class="form-select bg-dark text-white">
+                                {% for truck in trucks %}
+                                <option value="{{ truck.id }}">{{ truck.matricule }} ({{ truck.model }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Date Début</label>
+                            <input type="datetime-local" name="start_date" class="form-control bg-dark text-white" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Date Fin</label>
+                            <input type="datetime-local" name="end_date" class="form-control bg-dark text-white" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Lieu Départ</label>
+                            <input type="text" name="lieu_depart" class="form-control bg-dark text-white" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Lieu Final</label>
+                            <input type="text" name="lieu_arrivee" class="form-control bg-dark text-white" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Statut</label>
+                            <select name="status" class="form-select bg-dark text-white">
+                                <option value="En cours">En cours</option>
+                                <option value="Terminé">Terminé</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-cpg">
+                        <i class="fas fa-save me-2"></i>Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const taskId = e.target.closest('tr').dataset.taskId;
+            if(confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?')) {
+                try {
+                    const response = await fetch(`/delete_task/${taskId}`, {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    if(response.ok) {
+                        e.target.closest('tr').remove();
+                        showFlash('Tâche supprimée avec succès', 'success');
+                    }
+                } catch (error) {
+                    console.error('Erreur:', error);
+                    showFlash('Erreur lors de la suppression', 'danger');
+                }
+            }
+        });
+    });
+
+    function showFlash(message, type) {
+        const flash = document.createElement('div');
+        flash.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3`;
+        flash.innerHTML = `${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+        document.body.appendChild(flash);
+        setTimeout(() => flash.remove(), 3000);
+    }
+});
+</script>
+{% endblock %}
